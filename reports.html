@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports | Audit Readiness Analyzer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-logo">
+                <i class="fas fa-shield-alt" style="font-size: 30px; color: #4361ee;"></i>
+                <h3>Audit Analyzer</h3>
+            </div>
+            
+            <nav class="sidebar-nav">
+    <a href="dashboard.html">  <!-- Change 'active' class based on current page -->
+        <i class="fas fa-tachometer-alt"></i>
+        <span>Dashboard</span>
+    </a>
+    <a href="audit-checklist.html">
+        <i class="fas fa-clipboard-check"></i>
+        <span>Audit Checklist</span>
+    </a>
+    <a href="risk-analysis.html">
+        <i class="fas fa-chart-pie"></i>
+        <span>Risk Analysis</span>
+    </a>
+    <a href="reports.html" class="active">
+        <i class="fas fa-file-alt"></i>
+        <span>Reports</span>
+    </a>
+    <a href="settings.html">
+        <i class="fas fa-cog"></i>
+        <span>Settings</span>
+    </a>
+</nav>
+            
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <div>
+                        <p class="user-name">John Smith</p>
+                        <p class="user-role">Audit Officer</p>
+                    </div>
+                </div>
+                <a href="index.html" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <header class="dashboard-header">
+                <h1>Audit Readiness Reports</h1>
+                <div class="header-actions">
+                    <div class="date-badge">
+                        <i class="fas fa-calendar"></i>
+                        <span id="currentDate"></span>
+                    </div>
+                    <button class="btn-export" onclick="exportAllReports()">
+                        <i class="fas fa-download"></i> Export All
+                    </button>
+                </div>
+            </header>
+
+            <!-- Report Generation Panel -->
+            <div class="report-generation-panel">
+                <h3>Generate New Report</h3>
+                <div class="report-controls">
+                    <div class="form-group">
+                        <label>Department</label>
+                        <select id="reportDepartment">
+                            <option value="all">All Departments</option>
+                            <option value="finance">Finance</option>
+                            <option value="hr">HR</option>
+                            <option value="it">IT</option>
+                            <option value="operations">Operations</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Report Type</label>
+                        <select id="reportType">
+                            <option value="readiness">Audit Readiness Report</option>
+                            <option value="gap">Gap Analysis Report</option>
+                            <option value="risk">Risk Assessment Report</option>
+                            <option value="compliance">Compliance Summary</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Date Range</label>
+                        <select id="dateRange">
+                            <option value="current">Current Assessment</option>
+                            <option value="month">Last 30 Days</option>
+                            <option value="quarter">Last Quarter</option>
+                            <option value="year">Last Year</option>
+                        </select>
+                    </div>
+                    <button class="btn-generate" onclick="generateCustomReport()">
+                        <i class="fas fa-file-pdf"></i> Generate Report
+                    </button>
+                </div>
+            </div>
+
+            <!-- Recent Reports -->
+            <div class="recent-reports">
+                <h3>Recent Reports</h3>
+                <div class="reports-list" id="reportsList">
+                    <!-- Reports will be loaded here via JavaScript -->
+                </div>
+            </div>
+
+            <!-- Report Preview Modal -->
+            <div class="report-preview" id="reportPreview" style="display: none;">
+                <div class="preview-header">
+                    <h3>Report Preview</h3>
+                    <button class="btn-close" onclick="closePreview()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="preview-content" id="previewContent">
+                    <!-- Preview content will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/reports.js"></script>
+</body>
+</html>

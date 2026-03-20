@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications | Audit Readiness Analyzer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .notifications-page {
+            padding: 30px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .notifications-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 25px 30px;
+            border-radius: 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .notifications-header h1 {
+            font-size: 28px;
+            color: #1e293b;
+        }
+        .notifications-list {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            overflow: hidden;
+        }
+        .notification-item {
+            display: flex;
+            align-items: center;
+            padding: 20px 30px;
+            border-bottom: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .notification-item:hover {
+            background: #f8fafc;
+            transform: translateX(5px);
+        }
+        .notification-item.unread {
+            background: #f0f9ff;
+            border-left: 4px solid #4361ee;
+        }
+        .notification-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            font-size: 20px;
+        }
+        .notification-content {
+            flex: 1;
+        }
+        .notification-content h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 5px;
+        }
+        .notification-content p {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 5px;
+        }
+        .notification-time {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+        .back-btn {
+            padding: 12px 24px;
+            background: linear-gradient(145deg, #4361ee, #3a56d4);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="sidebar">
+            <div class="sidebar-logo">
+                <i class="fas fa-shield-alt" style="font-size: 30px; color: #4361ee;"></i>
+                <h3>Audit Analyzer</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html">
+                    <i class="fas fa-tachometer-alt"></i><span>Dashboard</span>
+                </a>
+                <a href="audit-checklist.html">
+                    <i class="fas fa-clipboard-check"></i><span>Audit Checklist</span>
+                </a>
+                <a href="risk-analysis.html">
+                    <i class="fas fa-chart-pie"></i><span>Risk Analysis</span>
+                </a>
+                <a href="reports.html">
+                    <i class="fas fa-file-alt"></i><span>Reports</span>
+                </a>
+                <a href="settings.html">
+                    <i class="fas fa-cog"></i><span>Settings</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <div>
+                        <p class="user-name">John Smith</p>
+                        <p class="user-role">Audit Officer</p>
+                    </div>
+                </div>
+                <a href="index.html" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="notifications-page">
+                <div class="notifications-header">
+                    <h1>Notifications</h1>
+                    <button class="back-btn" onclick="window.location.href='dashboard.html'">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </button>
+                </div>
+                
+                <div class="notifications-list" id="notificationsList">
+                    <div class="notification-item unread">
+                        <div class="notification-icon" style="background: #fee2e2;">
+                            <i class="fas fa-exclamation-triangle" style="color: #dc2626;"></i>
+                        </div>
+                        <div class="notification-content">
+                            <h4>HR Department at High Risk</h4>
+                            <p>HR readiness score is 45% - Immediate action required</p>
+                            <span class="notification-time">10 minutes ago</span>
+                        </div>
+                    </div>
+                    
+                    <div class="notification-item unread">
+                        <div class="notification-icon" style="background: #dcfce7;">
+                            <i class="fas fa-check-circle" style="color: #16a34a;"></i>
+                        </div>
+                        <div class="notification-content">
+                            <h4>Finance Assessment Completed</h4>
+                            <p>Finance department assessment saved successfully</p>
+                            <span class="notification-time">2 hours ago</span>
+                        </div>
+                    </div>
+                    
+                    <div class="notification-item">
+                        <div class="notification-icon" style="background: #dbeafe;">
+                            <i class="fas fa-file-pdf" style="color: #2563eb;"></i>
+                        </div>
+                        <div class="notification-content">
+                            <h4>Report Generated</h4>
+                            <p>IT Compliance Report is ready for download</p>
+                            <span class="notification-time">1 day ago</span>
+                        </div>
+                    </div>
+                    
+                    <div class="notification-item">
+                        <div class="notification-icon" style="background: #fed7aa;">
+                            <i class="fas fa-clock" style="color: #d97706;"></i>
+                        </div>
+                        <div class="notification-content">
+                            <h4>Audit Deadline Approaching</h4>
+                            <p>Q4 audit deadline in 7 days - Start preparation</p>
+                            <span class="notification-time">2 days ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

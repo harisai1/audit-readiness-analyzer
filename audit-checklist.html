@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audit Checklist | Internal Audit Readiness Analyzer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-logo">
+                <i class="fas fa-shield-alt" style="font-size: 30px; color: #4361ee;"></i>
+                <h3>Audit Analyzer</h3>
+            </div>
+            
+            <nav class="sidebar-nav">
+    <a href="dashboard.html">  <!-- Change 'active' class based on current page -->
+        <i class="fas fa-tachometer-alt"></i>
+        <span>Dashboard</span>
+    </a>
+    <a href="audit-checklist.html" class="active">
+        <i class="fas fa-clipboard-check"></i>
+        <span>Audit Checklist</span>
+    </a>
+    <a href="risk-analysis.html">
+        <i class="fas fa-chart-pie"></i>
+        <span>Risk Analysis</span>
+    </a>
+    <a href="reports.html">
+        <i class="fas fa-file-alt"></i>
+        <span>Reports</span>
+    </a>
+    <a href="settings.html">
+        <i class="fas fa-cog"></i>
+        <span>Settings</span>
+    </a>
+</nav>
+            
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <div>
+                        <p class="user-name">John Smith</p>
+                        <p class="user-role">Audit Officer</p>
+                    </div>
+                </div>
+                <a href="index.html" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <header class="dashboard-header">
+                <h1>Audit Readiness Assessment</h1>
+                <div class="header-actions">
+                    <div class="date-badge">
+                        <i class="fas fa-calendar"></i>
+                        <span id="currentDate"></span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Assessment Header -->
+            <div class="assessment-header">
+                <div class="dept-selector">
+                    <label for="departmentSelect">Select Department:</label>
+                    <select id="departmentSelect" class="dept-dropdown">
+                        <option value="finance">Finance & Accounting</option>
+                        <option value="hr">Human Resources</option>
+                        <option value="it">Information Technology</option>
+                        <option value="operations">Operations</option>
+                        <option value="procurement">Procurement</option>
+                        <option value="compliance">Compliance & Legal</option>
+                    </select>
+                </div>
+                
+                <div class="live-score">
+                    <div class="score-circle">
+                        <svg class="progress-ring" width="100" height="100">
+                            <circle class="progress-ring-circle-bg" stroke="#e2e8f0" stroke-width="6" fill="transparent" r="42" cx="50" cy="50"/>
+                            <circle class="progress-ring-circle" stroke="#4361ee" stroke-width="6" fill="transparent" r="42" cx="50" cy="50"/>
+                        </svg>
+                        <span class="score-value" id="liveScoreValue">0%</span>
+                    </div>
+                    <div class="score-label">
+                        <p>Current Readiness</p>
+                        <span class="risk-indicator" id="riskIndicator">Not Assessed</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Checklist Categories -->
+            <div class="checklist-container">
+                <!-- Financial Compliance -->
+                <div class="category-section" id="category-finance">
+                    <div class="category-header" onclick="toggleCategory('finance')">
+                        <div class="category-title">
+                            <i class="fas fa-coins"></i>
+                            <h3>Financial Statement Compliance</h3>
+                        </div>
+                        <div class="category-stats">
+                            <span class="progress-text" id="progress-finance">0/8 completed</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="category-items show" id="items-finance">
+                        <div class="checklist-item">
+                            <div class="item-header">
+                                <div class="item-title">
+                                    <span class="item-number">1.</span>
+                                    <span class="item-text">Are monthly financial statements prepared and reviewed on time?</span>
+                                    <span class="risk-tag high">High Risk</span>
+                                </div>
+                                <div class="item-actions">
+                                    <div class="response-group">
+                                        <label class="response-option">
+                                            <input type="radio" name="q1" value="yes" onchange="updateScore()">
+                                            <span class="response-label yes">Yes</span>
+                                        </label>
+                                        <label class="response-option">
+                                            <input type="radio" name="q1" value="partial" onchange="updateScore()">
+                                            <span class="response-label partial">Partial</span>
+                                        </label>
+                                        <label class="response-option">
+                                            <input type="radio" name="q1" value="no" onchange="updateScore()">
+                                            <span class="response-label no">No</span>
+                                        </label>
+                                    </div>
+                                    <button class="btn-upload" onclick="uploadDocument(this)">
+                                        <i class="fas fa-upload"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="item-comments">
+                                <input type="text" class="comment-input" placeholder="Add comments or evidence reference...">
+                            </div>
+                        </div>
+
+                        <div class="checklist-item">
+                            <div class="item-header">
+                                <div class="item-title">
+                                    <span class="item-number">2.</span>
+                                    <span class="item-text">Are all bank reconciliations completed monthly?</span>
+                                    <span class="risk-tag high">High Risk</span>
+                                </div>
+                                <div class="item-actions">
+                                    <div class="response-group">
+                                        <label class="response-option">
+                                            <input type="radio" name="q2" value="yes" onchange="updateScore()">
+                                            <span class="response-label yes">Yes</span>
+                                        </label>
+                                        <label class="response-option">
+                                            <input type="radio" name="q2" value="partial" onchange="updateScore()">
+                                            <span class="response-label partial">Partial</span>
+                                        </label>
+                                        <label class="response-option">
+                                            <input type="radio" name="q2" value="no" onchange="updateScore()">
+                                            <span class="response-label no">No</span>
+                                        </label>
+                                    </div>
+                                    <button class="btn-upload" onclick="uploadDocument(this)">
+                                        <i class="fas fa-upload"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="item-comments">
+                                <input type="text" class="comment-input" placeholder="Add comments or evidence reference...">
+                            </div>
+                        </div>
+
+                        <div class="checklist-item">
+                            <div class="item-header">
+                                <div class="item-title">
+                                    <span class="item-number">3.</span>
+                                    <span class="item-text">Is there proper segregation of duties in payment processing?</span>
+                                    <span class="risk-tag critical">Critical Risk</span>
+                                </div>
+                                <div class="item-actions">
+                                    <div class="response-group">
+                                        <label class="response-option">
+                                            <input type="radio" name="q3" value="yes" onchange="updateScore()">
+                                            <span class="response-label yes">Yes</span>
+                                        </label>
+                                        <label class="response-option">
+                                            <input type="radio" name="q3" value="partial" onchange="updateScore()">
+                                            <span class="response-label partial">Partial</span>
+                                        </label>
+                                        <label class="response-option">
+                                            <input type="radio" name="q3" value="no" onchange="updateScore()">
+                                            <span class="response-label no">No</span>
+                                        </label>
+                                    </div>
+                                    <button class="btn-upload" onclick="uploadDocument(this)">
+                                        <i class="fas fa-upload"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="item-comments">
+                                <input type="text" class="comment-input" placeholder="Add comments or evidence reference...">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HR Compliance -->
+                <div class="category-section" id="category-hr">
+                    <div class="category-header" onclick="toggleCategory('hr')">
+                        <div class="category-title">
+                            <i class="fas fa-users"></i>
+                            <h3>HR & Payroll Compliance</h3>
+                        </div>
+                        <div class="category-stats">
+                            <span class="progress-text" id="progress-hr">0/6 completed</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="category-items show" id="items-hr">
+                        <div class="checklist-item">
+                            <div class="item-header">
+                                <div class="item-title">
+                                    <span class="item-number">1.</span>
+                                    <span class="item-text">Are employee records complete and up to date?</span>
+                                    <span class="risk-tag high">High Risk</span>
+                                </div>
+                                <div class="item-actions">
+                                    <div class="response-group">
+                                        <label class="response-option">
+                                            <input type="radio" name="hr1" value="yes" onchange="updateScore()">
+                                            <span class="response-label yes">Yes</span>
+                                        </label>
+                                        <label class="response-option">
+                                            <input type="radio" name="hr1" value="partial" onchange="updateScore()">
+                                            <span class="response-label partial">Partial</span>
+                                        </label>
+                                        <label class="response-option">
+                                            <input type="radio" name="hr1" value="no" onchange="updateScore()">
+                                            <span class="response-label no">No</span>
+                                        </label>
+                                    </div>
+                                    <button class="btn-upload" onclick="uploadDocument(this)">
+                                        <i class="fas fa-upload"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="item-comments">
+                                <input type="text" class="comment-input" placeholder="Add comments or evidence reference...">
+                            </div>
+                        </div>
+
+                        <div class="checklist-item">
+                            <div class="item-header">
+                                <div class="item-title">
+                                    <span class="item-number">2.</span>
+                                    <span class="item-text">Is payroll processed accurately and on time?</span>
+                                    <span class="risk-tag critical">Critical Risk</span>
+                                </div>
+                                <div class="item-actions">
+                                    <div class="response-group">
+                                        <label class="response-option">
+                                            <input type="radio" name="hr2" value="yes" onchange="updateScore()">
+                                            <span class="response-label yes">Yes</span>
+                                        </label>
+                                        <label class="response-option">
+                                            <input type="radio" name="hr2" value="partial" onchange="updateScore()">
+                                            <span class="response-label partial">Partial</span>
+                                        </label>
+                                        <label class="response-option">
+                                            <input type="radio" name="hr2" value="no" onchange="updateScore()">
+                                            <span class="response-label no">No</span>
+                                        </label>
+                                    </div>
+                                    <button class="btn-upload" onclick="uploadDocument(this)">
+                                        <i class="fas fa-upload"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="item-comments">
+                                <input type="text" class="comment-input" placeholder="Add comments or evidence reference...">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- IT Compliance -->
+                <div class="category-section" id="category-it">
+                    <div class="category-header" onclick="toggleCategory('it')">
+                        <div class="category-title">
+                            <i class="fas fa-laptop-code"></i>
+                            <h3>IT & Security Controls</h3>
+                        </div>
+                        <div class="category-stats">
+                            <span class="progress-text" id="progress-it">0/7 completed</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="category-items show" id="items-it">
+                        <div class="checklist-item">
+                            <div class="item-header">
+                                <div class="item-title">
+                                    <span class="item-number">1.</span>
+                                    <span class="item-text">Are access controls and user permissions regularly reviewed?</span>
+                                    <span class="risk-tag critical">Critical Risk</span>
+                                </div>
+                                <div class="item-actions">
+                                    <div class="response-group">
+                                        <label class="response-option">
+                                            <input type="radio" name="it1" value="yes" onchange="updateScore()">
+                                            <span class="response-label yes">Yes</span>
+                                        </label>
+                                        <label class="response-option">
+                                            <input type="radio" name="it1" value="partial" onchange="updateScore()">
+                                            <span class="response-label partial">Partial</span>
+                                        </label>
+                                        <label class="response-option">
+                                            <input type="radio" name="it1" value="no" onchange="updateScore()">
+                                            <span class="response-label no">No</span>
+                                        </label>
+                                    </div>
+                                    <button class="btn-upload" onclick="uploadDocument(this)">
+                                        <i class="fas fa-upload"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="item-comments">
+                                <input type="text" class="comment-input" placeholder="Add comments or evidence reference...">
+                            </div>
+                        </div>
+
+                        <div class="checklist-item">
+                            <div class="item-header">
+                                <div class="item-title">
+                                    <span class="item-number">2.</span>
+                                    <span class="item-text">Are regular data backups performed and tested?</span>
+                                    <span class="risk-tag high">High Risk</span>
+                                </div>
+                                <div class="item-actions">
+                                    <div class="response-group">
+                                        <label class="response-option">
+                                            <input type="radio" name="it2" value="yes" onchange="updateScore()">
+                                            <span class="response-label yes">Yes</span>
+                                        </label>
+                                        <label class="response-option">
+                                            <input type="radio" name="it2" value="partial" onchange="updateScore()">
+                                            <span class="response-label partial">Partial</span>
+                                        </label>
+                                        <label class="response-option">
+                                            <input type="radio" name="it2" value="no" onchange="updateScore()">
+                                            <span class="response-label no">No</span>
+                                        </label>
+                                    </div>
+                                    <button class="btn-upload" onclick="uploadDocument(this)">
+                                        <i class="fas fa-upload"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="item-comments">
+                                <input type="text" class="comment-input" placeholder="Add comments or evidence reference...">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Assessment Actions -->
+            <div class="assessment-actions">
+                <div class="action-left">
+                    <button class="btn-save" onclick="saveProgress()">
+                        <i class="fas fa-save"></i> Save Progress
+                    </button>
+                    <button class="btn-reset" onclick="resetAssessment()">
+                        <i class="fas fa-undo"></i> Reset
+                    </button>
+                </div>
+                <div class="action-right">
+                    <button class="btn-generate-report" onclick="generateReport()">
+                        <i class="fas fa-file-pdf"></i> Generate Readiness Report
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/audit.js"></script>
+</body>
+</html>

@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings | Audit Readiness Analyzer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Settings Page Specific Styles - ONLY ADDITIONS, NO CHANGES TO EXISTING */
+        .settings-container {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-200);
+        }
+
+        .settings-tabs {
+            display: flex;
+            gap: 10px;
+            border-bottom: 2px solid var(--gray-200);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .tab-btn {
+            padding: 12px 25px;
+            background: var(--gray-100);
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--gray-600);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tab-btn i {
+            font-size: 16px;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .settings-form {
+            max-width: 600px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: white;
+            color: var(--gray-800);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.1);
+        }
+
+        .form-group input:disabled,
+        .form-group select:disabled {
+            background: var(--gray-100);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .password-requirements {
+            margin-top: 10px;
+            padding: 15px;
+            background: var(--gray-100);
+            border-radius: var(--radius-md);
+            font-size: 13px;
+        }
+
+        .requirement {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            color: var(--gray-600);
+        }
+
+        .requirement i {
+            font-size: 14px;
+        }
+
+        .requirement.valid {
+            color: var(--success);
+        }
+
+        .requirement.invalid {
+            color: var(--gray-500);
+        }
+
+        .btn-save-settings {
+            padding: 14px 30px;
+            background: linear-gradient(145deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-save-settings:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .info-box {
+            background: #e8f0fe;
+            border-left: 4px solid var(--primary);
+            padding: 20px;
+            border-radius: var(--radius-md);
+            margin-bottom: 30px;
+        }
+
+        .info-box h4 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .success-message {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 15px 20px;
+            border-radius: var(--radius-md);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideDown 0.3s ease;
+        }
+
+        .error-message {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 15px 20px;
+            border-radius: var(--radius-md);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideDown 0.3s ease;
+        }
+
+        /* Toggle Switch Styles - NEW */
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Schedule option hover */
+        [onclick="selectSchedule"]:hover {
+            border-color: var(--primary) !important;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar (EXACTLY same as other pages) -->
+        <div class="sidebar">
+            <div class="sidebar-logo">
+                <i class="fas fa-shield-alt" style="font-size: 30px; color: #4361ee;"></i>
+                <h3>Audit Analyzer</h3>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="dashboard.html">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="audit-checklist.html">
+                    <i class="fas fa-clipboard-check"></i>
+                    <span>Audit Checklist</span>
+                </a>
+                <a href="risk-analysis.html">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Risk Analysis</span>
+                </a>
+                <a href="reports.html">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Reports</span>
+                </a>
+                <a href="settings.html" class="active">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <div>
+                        <p class="user-name" id="sidebarUserName">John Smith</p>
+                        <p class="user-role" id="sidebarUserRole">Audit Officer</p>
+                    </div>
+                </div>
+                <a href="index.html" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <header class="dashboard-header">
+                <h1>Settings</h1>
+                <div class="header-actions">
+                    <div class="date-badge">
+                        <i class="fas fa-calendar"></i>
+                        <span id="currentDate"></span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Settings Container -->
+            <div class="settings-container">
+                <!-- Success/Error Messages -->
+                <div id="successMessage" class="success-message" style="display: none;">
+                    <i class="fas fa-check-circle"></i>
+                    <span id="successText"></span>
+                </div>
+                <div id="errorMessage" class="error-message" style="display: none;">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span id="errorText"></span>
+                </div>
+
+                <!-- Settings Tabs -->
+                <div class="settings-tabs">
+                    <button class="tab-btn active" onclick="switchTab('profile')">
+                        <i class="fas fa-user"></i> Profile Settings
+                    </button>
+                    <button class="tab-btn" onclick="switchTab('password')">
+                        <i class="fas fa-lock"></i> Change Password
+                    </button>
+                    <button class="tab-btn" onclick="switchTab('notifications')">
+                        <i class="fas fa-bell"></i> Notifications
+                    </button>
+                </div>
+
+                <!-- PROFILE SETTINGS TAB -->
+                <div id="profileTab" class="tab-content active">
+                    <div class="info-box">
+                        <h4><i class="fas fa-info-circle"></i> Profile Information</h4>
+                        <p>Update your personal information. All fields are editable.</p>
+                    </div>
+
+                    <form id="profileForm" class="settings-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label><i class="fas fa-user"></i> First Name</label>
+                                <input type="text" id="firstName" value="John" placeholder="Enter first name">
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-user"></i> Last Name</label>
+                                <input type="text" id="lastName" value="Smith" placeholder="Enter last name">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label><i class="fas fa-envelope"></i> Email Address</label>
+                            <input type="email" id="email" value="john.smith@company.com" placeholder="Enter email">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label><i class="fas fa-briefcase"></i> Role (EDITABLE NOW)</label>
+                                <select id="role">
+                                    <option value="Audit Officer" selected>Audit Officer</option>
+                                    <option value="Audit Manager">Audit Manager</option>
+                                    <option value="Compliance Officer">Compliance Officer</option>
+                                    <option value="Internal Auditor">Internal Auditor</option>
+                                    <option value="Risk Analyst">Risk Analyst</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-building"></i> Department (EDITABLE NOW)</label>
+                                <select id="department">
+                                    <option value="Audit" selected>Audit</option>
+                                    <option value="Finance">Finance</option>
+                                    <option value="HR">Human Resources</option>
+                                    <option value="IT">Information Technology</option>
+                                    <option value="Operations">Operations</option>
+                                    <option value="Compliance">Compliance</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label><i class="fas fa-phone"></i> Phone Number</label>
+                            <input type="tel" id="phone" value="+1 (555) 123-4567" placeholder="Enter phone number">
+                        </div>
+
+                        <div class="form-group">
+                            <label><i class="fas fa-map-marker-alt"></i> Location</label>
+                            <input type="text" id="location" value="New York, USA" placeholder="Enter location">
+                        </div>
+
+                        <div class="form-group">
+                            <label><i class="fas fa-info-circle"></i> Bio</label>
+                            <textarea id="bio" rows="3" placeholder="Tell us about yourself">Experienced audit professional with 5+ years in internal audit and compliance.</textarea>
+                        </div>
+
+                        <button type="button" class="btn-save-settings" onclick="saveProfile()">
+                            <i class="fas fa-save"></i> Save Profile Changes
+                        </button>
+                    </form>
+                </div>
+
+                <!-- CHANGE PASSWORD TAB -->
+                <div id="passwordTab" class="tab-content">
+                    <div class="info-box">
+                        <h4><i class="fas fa-lock"></i> Change Password</h4>
+                        <p>Update your password. Make sure it's secure and you remember it!</p>
+                    </div>
+
+                    <form id="passwordForm" class="settings-form">
+                        <div class="form-group">
+                            <label><i class="fas fa-key"></i> Current Password</label>
+                            <input type="password" id="currentPassword" placeholder="Enter current password">
+                        </div>
+
+                        <div class="form-group">
+                            <label><i class="fas fa-lock"></i> New Password</label>
+                            <input type="password" id="newPassword" placeholder="Enter new password" onkeyup="checkPasswordStrength()">
+                        </div>
+
+                        <div class="form-group">
+                            <label><i class="fas fa-check-circle"></i> Confirm New Password</label>
+                            <input type="password" id="confirmPassword" placeholder="Confirm new password">
+                        </div>
+
+                        <!-- Password Requirements -->
+                        <div class="password-requirements">
+                            <p style="margin-bottom: 10px; font-weight: 600;">Password must contain:</p>
+                            <div class="requirement" id="req-length">
+                                <i class="fas fa-circle"></i> At least 8 characters
+                            </div>
+                            <div class="requirement" id="req-uppercase">
+                                <i class="fas fa-circle"></i> At least one uppercase letter
+                            </div>
+                            <div class="requirement" id="req-lowercase">
+                                <i class="fas fa-circle"></i> At least one lowercase letter
+                            </div>
+                            <div class="requirement" id="req-number">
+                                <i class="fas fa-circle"></i> At least one number
+                            </div>
+                            <div class="requirement" id="req-match">
+                                <i class="fas fa-circle"></i> Passwords match
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn-save-settings" onclick="changePassword()">
+                            <i class="fas fa-save"></i> Update Password
+                        </button>
+                    </form>
+                </div>
+
+                <!-- NOTIFICATIONS TAB - BEAUTIFUL REDESIGNED VERSION -->
+                <div id="notificationsTab" class="tab-content">
+                    <div class="info-box" style="background: linear-gradient(145deg, #e8f0fe, #d1e0ff); border-left: 5px solid var(--primary);">
+                        <h4 style="display: flex; align-items: center; gap: 12px; color: var(--primary-dark);">
+                            <i class="fas fa-bell" style="font-size: 24px;"></i>
+                            Notification Preferences
+                        </h4>
+                        <p style="color: var(--gray-700); margin-left: 36px;">Choose how you want to receive updates and alerts</p>
+                    </div>
+
+                    <div style="padding: 20px 0;">
+                        <!-- Notification Cards -->
+                        <div style="display: flex; flex-direction: column; gap: 20px; margin-bottom: 30px;">
+                            
+                            <!-- Email Notifications Card -->
+                            <div style="background: white; border: 2px solid var(--gray-200); border-radius: 16px; padding: 25px; transition: all 0.3s ease;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
+                                    <div style="display: flex; align-items: center; gap: 15px;">
+                                        <div style="width: 50px; height: 50px; background: rgba(67, 97, 238, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                            <i class="fas fa-envelope" style="font-size: 24px; color: var(--primary);"></i>
+                                        </div>
+                                        <div>
+                                            <h4 style="font-size: 18px; font-weight: 600; color: var(--gray-800); margin-bottom: 5px;">Email Notifications</h4>
+                                            <p style="color: var(--gray-500); font-size: 14px;">Receive audit reminders and updates via email</p>
+                                        </div>
+                                    </div>
+                                    <label style="position: relative; display: inline-block; width: 60px; height: 34px;">
+                                        <input type="checkbox" id="emailNotif" checked style="opacity: 0; width: 0; height: 0;">
+                                        <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px;" class="slider" onclick="toggleCheckbox('emailNotif')"></span>
+                                        <span style="position: absolute; content: ''; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%;" class="slider-knob"></span>
+                                    </label>
+                                </div>
+                                <div style="background: var(--gray-100); padding: 12px 15px; border-radius: 10px; margin-top: 10px;">
+                                    <div style="display: flex; align-items: center; gap: 10px; color: var(--gray-600);">
+                                        <i class="fas fa-clock" style="color: var(--primary);"></i>
+                                        <span style="font-size: 13px;">Daily digest at 9:00 AM</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Report Alerts Card -->
+                            <div style="background: white; border: 2px solid var(--gray-200); border-radius: 16px; padding: 25px;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
+                                    <div style="display: flex; align-items: center; gap: 15px;">
+                                        <div style="width: 50px; height: 50px; background: rgba(16, 185, 129, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                            <i class="fas fa-file-alt" style="font-size: 24px; color: var(--success);"></i>
+                                        </div>
+                                        <div>
+                                            <h4 style="font-size: 18px; font-weight: 600; color: var(--gray-800); margin-bottom: 5px;">Report Alerts</h4>
+                                            <p style="color: var(--gray-500); font-size: 14px;">Get notified when new reports are generated</p>
+                                        </div>
+                                    </div>
+                                    <label style="position: relative; display: inline-block; width: 60px; height: 34px;">
+                                        <input type="checkbox" id="reportNotif" checked style="opacity: 0; width: 0; height: 0;">
+                                        <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px;" class="slider" onclick="toggleCheckbox('reportNotif')"></span>
+                                        <span style="position: absolute; content: ''; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%;" class="slider-knob"></span>
+                                    </label>
+                                </div>
+                                <div style="background: var(--gray-100); padding: 12px 15px; border-radius: 10px; margin-top: 10px;">
+                                    <div style="display: flex; align-items: center; gap: 15px;">
+                                        <div style="display: flex; align-items: center; gap: 5px;">
+                                            <i class="fas fa-file-pdf" style="color: #ef4444;"></i>
+                                            <span style="font-size: 13px;">PDF</span>
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 5px;">
+                                            <i class="fas fa-file-excel" style="color: #10b981;"></i>
+                                            <span style="font-size: 13px;">Excel</span>
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 5px;">
+                                            <i class="fas fa-file-word" style="color: #3b82f6;"></i>
+                                            <span style="font-size: 13px;">Word</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Risk Alerts Card -->
+                            <div style="background: white; border: 2px solid var(--gray-200); border-radius: 16px; padding: 25px;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
+                                    <div style="display: flex; align-items: center; gap: 15px;">
+                                        <div style="width: 50px; height: 50px; background: rgba(245, 158, 11, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                            <i class="fas fa-exclamation-triangle" style="font-size: 24px; color: var(--warning);"></i>
+                                        </div>
+                                        <div>
+                                            <h4 style="font-size: 18px; font-weight: 600; color: var(--gray-800); margin-bottom: 5px;">Risk Alerts</h4>
+                                            <p style="color: var(--gray-500); font-size: 14px;">Immediate alerts for high-risk findings</p>
+                                        </div>
+                                    </div>
+                                    <label style="position: relative; display: inline-block; width: 60px; height: 34px;">
+                                        <input type="checkbox" id="riskNotif" checked style="opacity: 0; width: 0; height: 0;">
+                                        <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px;" class="slider" onclick="toggleCheckbox('riskNotif')"></span>
+                                        <span style="position: absolute; content: ''; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%;" class="slider-knob"></span>
+                                    </label>
+                                </div>
+                                <div style="background: var(--gray-100); padding: 12px 15px; border-radius: 10px; margin-top: 10px;">
+                                    <div style="display: flex; align-items: center; gap: 15px;">
+                                        <span style="background: rgba(239, 68, 68, 0.1); color: #ef4444; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;">🔴 HIGH PRIORITY</span>
+                                        <span style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;">🟡 MEDIUM</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Deadline Reminders Card -->
+                            <div style="background: white; border: 2px solid var(--gray-200); border-radius: 16px; padding: 25px;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
+                                    <div style="display: flex; align-items: center; gap: 15px;">
+                                        <div style="width: 50px; height: 50px; background: rgba(139, 92, 246, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                            <i class="fas fa-calendar-alt" style="font-size: 24px; color: #8b5cf6;"></i>
+                                        </div>
+                                        <div>
+                                            <h4 style="font-size: 18px; font-weight: 600; color: var(--gray-800); margin-bottom: 5px;">Deadline Reminders</h4>
+                                            <p style="color: var(--gray-500); font-size: 14px;">Reminders for upcoming audit deadlines</p>
+                                        </div>
+                                    </div>
+                                    <label style="position: relative; display: inline-block; width: 60px; height: 34px;">
+                                        <input type="checkbox" id="deadlineNotif" style="opacity: 0; width: 0; height: 0;">
+                                        <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px;" class="slider" onclick="toggleCheckbox('deadlineNotif')"></span>
+                                        <span style="position: absolute; content: ''; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%;" class="slider-knob"></span>
+                                    </label>
+                                </div>
+                                <div style="background: var(--gray-100); padding: 12px 15px; border-radius: 10px; margin-top: 10px;">
+                                    <div style="display: flex; align-items: center; gap: 20px;">
+                                        <div style="display: flex; align-items: center; gap: 8px;">
+                                            <i class="far fa-bell" style="color: #8b5cf6;"></i>
+                                            <span style="font-size: 13px;">3 days before</span>
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 8px;">
+                                            <i class="far fa-bell" style="color: #8b5cf6;"></i>
+                                            <span style="font-size: 13px;">1 day before</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Additional Options - Schedule -->
+                        <div style="background: linear-gradient(145deg, #f8fafc, #f1f5f9); border-radius: 16px; padding: 25px; margin-bottom: 30px;">
+                            <h4 style="font-size: 16px; font-weight: 600; color: var(--gray-700); margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
+                                <i class="fas fa-sliders-h" style="color: var(--primary);"></i>
+                                Notification Schedule
+                            </h4>
+                            
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                                <div style="background: white; padding: 15px; border-radius: 12px; text-align: center; border: 2px solid var(--gray-200); cursor: pointer;" onclick="selectSchedule('immediate')" id="schedule-immediate">
+                                    <i class="fas fa-bolt" style="font-size: 24px; color: var(--primary); margin-bottom: 8px; display: block;"></i>
+                                    <span style="font-weight: 600; font-size: 14px;">Immediate</span>
+                                </div>
+                                <div style="background: white; padding: 15px; border-radius: 12px; text-align: center; border: 2px solid var(--primary); cursor: pointer;" onclick="selectSchedule('daily')" id="schedule-daily">
+                                    <i class="fas fa-sun" style="font-size: 24px; color: var(--primary); margin-bottom: 8px; display: block;"></i>
+                                    <span style="font-weight: 600; font-size: 14px;">Daily Digest</span>
+                                </div>
+                                <div style="background: white; padding: 15px; border-radius: 12px; text-align: center; border: 2px solid var(--gray-200); cursor: pointer;" onclick="selectSchedule('weekly')" id="schedule-weekly">
+                                    <i class="fas fa-calendar-week" style="font-size: 24px; color: var(--primary); margin-bottom: 8px; display: block;"></i>
+                                    <span style="font-weight: 600; font-size: 14px;">Weekly</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Save Button -->
+                        <button type="button" class="btn-save-settings" onclick="saveNotifications()" style="width: 100%; justify-content: center; padding: 16px; font-size: 16px;">
+                            <i class="fas fa-save"></i> Save Notification Preferences
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set current date
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentDate = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const dateElement = document.getElementById('currentDate');
+            if (dateElement) {
+                dateElement.innerHTML = currentDate.toLocaleDateString('en-US', options);
+            }
+
+            // Load saved profile data
+            loadSavedProfile();
+            
+            // Load notification preferences
+            loadNotifications();
+        });
+
+        // ===== TAB SWITCHING =====
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.getElementById('profileTab').classList.remove('active');
+            document.getElementById('passwordTab').classList.remove('active');
+            document.getElementById('notificationsTab').classList.remove('active');
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            if (tabName === 'profile') {
+                document.getElementById('profileTab').classList.add('active');
+                document.querySelectorAll('.tab-btn')[0].classList.add('active');
+            } else if (tabName === 'password') {
+                document.getElementById('passwordTab').classList.add('active');
+                document.querySelectorAll('.tab-btn')[1].classList.add('active');
+            } else if (tabName === 'notifications') {
+                document.getElementById('notificationsTab').classList.add('active');
+                document.querySelectorAll('.tab-btn')[2].classList.add('active');
+            }
+            
+            // Hide any messages
+            hideMessages();
+        }
+
+        // ===== PROFILE SETTINGS =====
+        function saveProfile() {
+            // Get all values
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const email = document.getElementById('email').value;
+            const role = document.getElementById('role').value;
+            const department = document.getElementById('department').value;
+            const phone = document.getElementById('phone').value;
+            const location = document.getElementById('location').value;
+            const bio = document.getElementById('bio').value;
+
+            // Validate
+            if (!firstName || !lastName || !email) {
+                showError('First name, last name and email are required!');
+                return;
+            }
+
+            if (!email.includes('@') || !email.includes('.')) {
+                showError('Please enter a valid email address!');
+                return;
+            }
+
+            // Save to localStorage
+            const profileData = {
+                firstName: firstName,
+                lastName: lastName,
+                fullName: firstName + ' ' + lastName,
+                email: email,
+                role: role,
+                department: department,
+                phone: phone,
+                location: location,
+                bio: bio,
+                lastUpdated: new Date().toISOString()
+            };
+
+            localStorage.setItem('userProfile', JSON.stringify(profileData));
+
+            // Update sidebar
+            document.getElementById('sidebarUserName').textContent = firstName + ' ' + lastName;
+            document.getElementById('sidebarUserRole').textContent = role;
+
+            // Show success message
+            showSuccess('Profile updated successfully!');
+        }
+
+        function loadSavedProfile() {
+            const saved = localStorage.getItem('userProfile');
+            if (saved) {
+                try {
+                    const profile = JSON.parse(saved);
+                    
+                    document.getElementById('firstName').value = profile.firstName || 'John';
+                    document.getElementById('lastName').value = profile.lastName || 'Smith';
+                    document.getElementById('email').value = profile.email || 'john.smith@company.com';
+                    document.getElementById('role').value = profile.role || 'Audit Officer';
+                    document.getElementById('department').value = profile.department || 'Audit';
+                    document.getElementById('phone').value = profile.phone || '+1 (555) 123-4567';
+                    document.getElementById('location').value = profile.location || 'New York, USA';
+                    document.getElementById('bio').value = profile.bio || 'Experienced audit professional with 5+ years in internal audit and compliance.';
+                    
+                    // Update sidebar
+                    document.getElementById('sidebarUserName').textContent = profile.fullName || (profile.firstName + ' ' + profile.lastName);
+                    document.getElementById('sidebarUserRole').textContent = profile.role || 'Audit Officer';
+                } catch (e) {
+                    console.error('Error loading profile:', e);
+                }
+            }
+        }
+
+        // ===== CHANGE PASSWORD =====
+        function checkPasswordStrength() {
+            const password = document.getElementById('newPassword').value;
+            
+            // Length check
+            const lengthReq = document.getElementById('req-length');
+            if (password.length >= 8) {
+                lengthReq.innerHTML = '<i class="fas fa-check-circle" style="color: #10b981;"></i> At least 8 characters ✓';
+                lengthReq.classList.add('valid');
+                lengthReq.classList.remove('invalid');
+            } else {
+                lengthReq.innerHTML = '<i class="fas fa-circle"></i> At least 8 characters';
+                lengthReq.classList.remove('valid');
+            }
+            
+            // Uppercase check
+            const upperReq = document.getElementById('req-uppercase');
+            if (/[A-Z]/.test(password)) {
+                upperReq.innerHTML = '<i class="fas fa-check-circle" style="color: #10b981;"></i> At least one uppercase letter ✓';
+                upperReq.classList.add('valid');
+                upperReq.classList.remove('invalid');
+            } else {
+                upperReq.innerHTML = '<i class="fas fa-circle"></i> At least one uppercase letter';
+                upperReq.classList.remove('valid');
+            }
+            
+            // Lowercase check
+            const lowerReq = document.getElementById('req-lowercase');
+            if (/[a-z]/.test(password)) {
+                lowerReq.innerHTML = '<i class="fas fa-check-circle" style="color: #10b981;"></i> At least one lowercase letter ✓';
+                lowerReq.classList.add('valid');
+                lowerReq.classList.remove('invalid');
+            } else {
+                lowerReq.innerHTML = '<i class="fas fa-circle"></i> At least one lowercase letter';
+                lowerReq.classList.remove('valid');
+            }
+            
+            // Number check
+            const numReq = document.getElementById('req-number');
+            if (/[0-9]/.test(password)) {
+                numReq.innerHTML = '<i class="fas fa-check-circle" style="color: #10b981;"></i> At least one number ✓';
+                numReq.classList.add('valid');
+                numReq.classList.remove('invalid');
+            } else {
+                numReq.innerHTML = '<i class="fas fa-circle"></i> At least one number';
+                numReq.classList.remove('valid');
+            }
+            
+            // Password match check
+            checkPasswordMatch();
+        }
+
+        function checkPasswordMatch() {
+            const newPass = document.getElementById('newPassword').value;
+            const confirmPass = document.getElementById('confirmPassword').value;
+            const matchReq = document.getElementById('req-match');
+            
+            if (newPass && confirmPass && newPass === confirmPass) {
+                matchReq.innerHTML = '<i class="fas fa-check-circle" style="color: #10b981;"></i> Passwords match ✓';
+                matchReq.classList.add('valid');
+                matchReq.classList.remove('invalid');
+                return true;
+            } else {
+                matchReq.innerHTML = '<i class="fas fa-circle"></i> Passwords match';
+                matchReq.classList.remove('valid');
+                return false;
+            }
+        }
+
+        function changePassword() {
+            const currentPass = document.getElementById('currentPassword').value;
+            const newPass = document.getElementById('newPassword').value;
+            const confirmPass = document.getElementById('confirmPassword').value;
+            
+            // Check if fields are filled
+            if (!currentPass) {
+                showError('Please enter your current password!');
+                return;
+            }
+            
+            if (!newPass) {
+                showError('Please enter a new password!');
+                return;
+            }
+            
+            // Validate password strength
+            if (newPass.length < 8) {
+                showError('Password must be at least 8 characters long!');
+                return;
+            }
+            
+            if (!/[A-Z]/.test(newPass)) {
+                showError('Password must contain at least one uppercase letter!');
+                return;
+            }
+            
+            if (!/[a-z]/.test(newPass)) {
+                showError('Password must contain at least one lowercase letter!');
+                return;
+            }
+            
+            if (!/[0-9]/.test(newPass)) {
+                showError('Password must contain at least one number!');
+                return;
+            }
+            
+            // Check if passwords match
+            if (newPass !== confirmPass) {
+                showError('New passwords do not match!');
+                return;
+            }
+            
+            // For demo: current password should be "admin123"
+            if (currentPass !== 'admin123' && currentPass !== 'Admin@123') {
+                showError('Current password is incorrect! (Hint: try admin123)');
+                return;
+            }
+            
+            // Save new password to localStorage (for demo purposes)
+            localStorage.setItem('userPassword', newPass);
+            
+            // Clear fields
+            document.getElementById('currentPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+            
+            // Reset requirement indicators
+            checkPasswordStrength();
+            
+            showSuccess('Password changed successfully!');
+        }
+
+        // ===== NOTIFICATION FUNCTIONS - NEW AND IMPROVED =====
+        
+        // Toggle checkbox function
+        function toggleCheckbox(id) {
+            const checkbox = document.getElementById(id);
+            checkbox.checked = !checkbox.checked;
+            
+            // Update the slider visual
+            const slider = checkbox.nextElementSibling;
+            if (checkbox.checked) {
+                slider.style.backgroundColor = '#4361ee';
+            } else {
+                slider.style.backgroundColor = '#ccc';
+            }
+        }
+
+        // Select notification schedule
+        function selectSchedule(schedule) {
+            // Remove active class from all
+            document.getElementById('schedule-immediate').style.borderColor = '#e2e8f0';
+            document.getElementById('schedule-daily').style.borderColor = '#e2e8f0';
+            document.getElementById('schedule-weekly').style.borderColor = '#e2e8f0';
+            
+            // Add active class to selected
+            document.getElementById(`schedule-${schedule}`).style.borderColor = '#4361ee';
+            
+            // Save to localStorage
+            localStorage.setItem('notificationSchedule', schedule);
+            
+            showSuccess(`Notification schedule set to ${schedule}`);
+        }
+
+        // Update toggle visual based on checkbox state
+        function updateToggleVisual(id) {
+            const checkbox = document.getElementById(id);
+            const slider = checkbox.nextElementSibling;
+            if (checkbox.checked) {
+                slider.style.backgroundColor = '#4361ee';
+            } else {
+                slider.style.backgroundColor = '#ccc';
+            }
+        }
+
+        // Save notifications function
+        function saveNotifications() {
+            const emailNotif = document.getElementById('emailNotif').checked;
+            const reportNotif = document.getElementById('reportNotif').checked;
+            const riskNotif = document.getElementById('riskNotif').checked;
+            const deadlineNotif = document.getElementById('deadlineNotif').checked;
+            
+            // Get schedule
+            let schedule = 'daily'; // default
+            if (document.getElementById('schedule-immediate').style.borderColor === 'rgb(67, 97, 238)') schedule = 'immediate';
+            if (document.getElementById('schedule-daily').style.borderColor === 'rgb(67, 97, 238)') schedule = 'daily';
+            if (document.getElementById('schedule-weekly').style.borderColor === 'rgb(67, 97, 238)') schedule = 'weekly';
+            
+            const notifSettings = {
+                email: emailNotif,
+                reports: reportNotif,
+                risk: riskNotif,
+                deadline: deadlineNotif,
+                schedule: schedule,
+                lastUpdated: new Date().toISOString()
+            };
+            
+            localStorage.setItem('notificationSettings', JSON.stringify(notifSettings));
+            
+            showSuccess('✅ Notification preferences saved successfully!');
+        }
+
+        // Load notifications function
+        function loadNotifications() {
+            const saved = localStorage.getItem('notificationSettings');
+            if (saved) {
+                try {
+                    const notif = JSON.parse(saved);
+                    document.getElementById('emailNotif').checked = notif.email !== false;
+                    document.getElementById('reportNotif').checked = notif.reports !== false;
+                    document.getElementById('riskNotif').checked = notif.risk !== false;
+                    document.getElementById('deadlineNotif').checked = notif.deadline === true;
+                    
+                    // Update toggle visuals
+                    updateToggleVisual('emailNotif');
+                    updateToggleVisual('reportNotif');
+                    updateToggleVisual('riskNotif');
+                    updateToggleVisual('deadlineNotif');
+                    
+                    // Set schedule
+                    if (notif.schedule) {
+                        selectSchedule(notif.schedule);
+                    }
+                } catch (e) {
+                    console.error('Error loading notifications:', e);
+                }
+            }
+        }
+
+        // ===== MESSAGE HANDLING =====
+        function showSuccess(message) {
+            document.getElementById('successText').textContent = message;
+            document.getElementById('successMessage').style.display = 'flex';
+            document.getElementById('errorMessage').style.display = 'none';
+            
+            setTimeout(() => {
+                document.getElementById('successMessage').style.display = 'none';
+            }, 3000);
+        }
+
+        function showError(message) {
+            document.getElementById('errorText').textContent = message;
+            document.getElementById('errorMessage').style.display = 'flex';
+            document.getElementById('successMessage').style.display = 'none';
+            
+            setTimeout(() => {
+                document.getElementById('errorMessage').style.display = 'none';
+            }, 3000);
+        }
+
+        function hideMessages() {
+            document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        // Add event listener for confirm password field
+        document.getElementById('confirmPassword')?.addEventListener('keyup', checkPasswordMatch);
+    </script>
+</body>
+</html>

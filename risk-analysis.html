@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Risk Analysis | Audit Readiness Analyzer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-logo">
+                <i class="fas fa-shield-alt" style="font-size: 30px; color: #4361ee;"></i>
+                <h3>Audit Analyzer</h3>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="dashboard.html">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="audit-checklist.html">
+                    <i class="fas fa-clipboard-check"></i>
+                    <span>Audit Checklist</span>
+                </a>
+                <a href="risk-analysis.html" class="active">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Risk Analysis</span>
+                </a>
+                <a href="reports.html">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Reports</span>
+                </a>
+                <a href="settings.html">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <div>
+                        <p class="user-name">John Smith</p>
+                        <p class="user-role">Audit Officer</p>
+                    </div>
+                </div>
+                <a href="index.html" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <header class="dashboard-header">
+                <h1>Risk Analysis Dashboard</h1>
+                <div class="header-actions">
+                    <div class="date-badge">
+                        <i class="fas fa-calendar"></i>
+                        <span id="currentDate"></span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Risk Overview Cards -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-icon red">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="kpi-info">
+                        <h3>High Risk Items</h3>
+                        <p class="kpi-value" style="color: #ef4444;">8</p>
+                        <span class="kpi-label">Critical attention needed</span>
+                    </div>
+                </div>
+                
+                <div class="kpi-card">
+                    <div class="kpi-icon orange">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <div class="kpi-info">
+                        <h3>Medium Risk</h3>
+                        <p class="kpi-value" style="color: #f59e0b;">15</p>
+                        <span class="kpi-label">Requires monitoring</span>
+                    </div>
+                </div>
+                
+                <div class="kpi-card">
+                    <div class="kpi-icon green">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="kpi-info">
+                        <h3>Low Risk</h3>
+                        <p class="kpi-value" style="color: #10b981;">22</p>
+                        <span class="kpi-label">Compliant items</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Risk by Department -->
+            <div class="chart-card" style="margin-bottom: 25px;">
+                <div class="chart-header">
+                    <h3>Risk Distribution by Department</h3>
+                </div>
+                <div style="height: 300px;">
+                    <canvas id="riskByDeptChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Risk Items List -->
+            <div class="recent-reports">
+                <h3>High Risk Items - Immediate Action Required</h3>
+                <div class="reports-list">
+                    <div class="report-item" style="border-left: 5px solid #ef4444;">
+                        <div class="report-icon" style="background: #fee2e2; color: #ef4444;">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="report-details">
+                            <h4>Finance Department - Segregation of Duties</h4>
+                            <div class="report-meta">
+                                <span><i class="fas fa-building"></i> Finance</span>
+                                <span class="risk-badge high">High Risk</span>
+                            </div>
+                        </div>
+                        <button class="btn-view" onclick="location.href='audit-checklist.html?dept=finance'">
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+
+                    <div class="report-item" style="border-left: 5px solid #ef4444;">
+                        <div class="report-icon" style="background: #fee2e2; color: #ef4444;">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="report-details">
+                            <h4>HR Department - Payroll Processing</h4>
+                            <div class="report-meta">
+                                <span><i class="fas fa-building"></i> HR</span>
+                                <span class="risk-badge high">High Risk</span>
+                            </div>
+                        </div>
+                        <button class="btn-view" onclick="location.href='audit-checklist.html?dept=hr'">
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+
+                    <div class="report-item" style="border-left: 5px solid #f59e0b;">
+                        <div class="report-icon" style="background: #fed7aa; color: #f59e0b;">
+                            <i class="fas fa-exclamation-circle"></i>
+                        </div>
+                        <div class="report-details">
+                            <h4>IT Department - Access Controls</h4>
+                            <div class="report-meta">
+                                <span><i class="fas fa-building"></i> IT</span>
+                                <span class="risk-badge medium">Medium Risk</span>
+                            </div>
+                        </div>
+                        <button class="btn-view" onclick="location.href='audit-checklist.html?dept=it'">
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current date
+            const date = new Date();
+            document.getElementById('currentDate').innerHTML = date.toLocaleDateString('en-US', { 
+                year: 'numeric', month: 'long', day: 'numeric' 
+            });
+
+            // Risk by Department Chart
+            const ctx = document.getElementById('riskByDeptChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Finance', 'HR', 'IT', 'Operations', 'Procurement', 'Legal'],
+                    datasets: [
+                        {
+                            label: 'High Risk',
+                            data: [3, 5, 1, 4, 2, 1],
+                            backgroundColor: '#ef4444',
+                            borderRadius: 6
+                        },
+                        {
+                            label: 'Medium Risk',
+                            data: [4, 6, 2, 5, 3, 2],
+                            backgroundColor: '#f59e0b',
+                            borderRadius: 6
+                        },
+                        {
+                            label: 'Low Risk',
+                            data: [8, 4, 12, 6, 7, 9],
+                            backgroundColor: '#10b981',
+                            borderRadius: 6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        x: {
+                            stacked: false,
+                        },
+                        y: {
+                            beginAtZero: true,
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

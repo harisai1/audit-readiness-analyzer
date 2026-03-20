@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Audit Readiness Analyzer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Notification Dropdown Styles - Add this to your style.css later */
+        .notification-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .notification-dropdown {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            width: 380px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+            border: 1px solid #e2e8f0;
+            z-index: 1000;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .notification-dropdown-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .notification-dropdown-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .clear-all-notifications {
+            background: none;
+            border: none;
+            color: #ef4444;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 6px;
+        }
+
+        .clear-all-notifications:hover {
+            background: #fee2e2;
+        }
+
+        .notification-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .notification-item-small {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid #f1f5f9;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .notification-item-small:hover {
+            background: #f8fafc;
+        }
+
+        .notification-item-small.unread {
+            background: #f0f9ff;
+        }
+
+        .notification-icon-small {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+
+        .notification-content-small {
+            flex: 1;
+        }
+
+        .notification-content-small h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 3px;
+        }
+
+        .notification-content-small p {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 3px;
+        }
+
+        .notification-time-small {
+            font-size: 11px;
+            color: #94a3b8;
+        }
+
+        .notification-dropdown-footer {
+            padding: 15px 20px;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .notification-dropdown-footer a {
+            color: #4361ee;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .notification-dropdown-footer a:hover {
+            text-decoration: underline;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* PDF Upload Styles */
+.upload-section {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 25px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-200);
+}
+
+.upload-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.upload-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--gray-800);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.upload-header h3 i {
+    color: var(--primary);
+    font-size: 22px;
+}
+
+.upload-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.upload-card {
+    background: linear-gradient(145deg, #f8fafc, #f1f5f9);
+    border: 2px dashed var(--gray-300);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.upload-card:hover {
+    border-color: var(--primary);
+    background: white;
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.upload-card i {
+    font-size: 40px;
+    color: var(--primary);
+    margin-bottom: 12px;
+}
+
+.upload-card h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: 5px;
+}
+
+.upload-card p {
+    font-size: 13px;
+    color: var(--gray-500);
+    margin-bottom: 15px;
+}
+
+.upload-card .file-info {
+    font-size: 12px;
+    color: var(--gray-500);
+    background: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    display: inline-block;
+    border: 1px solid var(--gray-200);
+}
+
+.upload-card.uploaded {
+    border-color: var(--success);
+    background: rgba(16, 185, 129, 0.05);
+}
+
+.upload-card.uploaded i {
+    color: var(--success);
+}
+
+.upload-card .remove-file {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--danger);
+    font-size: 14px;
+    cursor: pointer;
+    border: 1px solid var(--gray-200);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.upload-card:hover .remove-file {
+    opacity: 1;
+}
+
+.upload-card .remove-file:hover {
+    background: var(--danger);
+    color: white;
+    border-color: var(--danger);
+}
+
+.file-input {
+    display: none;
+}
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-logo">
+                <i class="fas fa-shield-alt" style="font-size: 30px; color: #4361ee;"></i>
+                <h3>Audit Analyzer</h3>
+            </div>
+            
+            <nav class="sidebar-nav">
+    <a href="dashboard.html" class="active">  <!-- Change 'active' class based on current page -->
+        <i class="fas fa-tachometer-alt"></i>
+        <span>Dashboard</span>
+    </a>
+    <a href="audit-checklist.html">
+        <i class="fas fa-clipboard-check"></i>
+        <span>Audit Checklist</span>
+    </a>
+    <a href="risk-analysis.html">
+        <i class="fas fa-chart-pie"></i>
+        <span>Risk Analysis</span>
+    </a>
+    <a href="reports.html">
+        <i class="fas fa-file-alt"></i>
+        <span>Reports</span>
+    </a>
+    <a href="settings.html">
+        <i class="fas fa-cog"></i>
+        <span>Settings</span>
+    </a>
+</nav>
+            
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <div>
+                        <p class="user-name">John Smith</p>
+                        <p class="user-role">Audit Officer</p>
+                    </div>
+                </div>
+                <a href="index.html" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <header class="dashboard-header">
+                <h1>Audit Readiness Dashboard</h1>
+                <div class="header-actions">
+                    <div class="date-badge">
+                        <i class="fas fa-calendar"></i>
+                        <span id="currentDate"></span>
+                    </div>
+                    
+                    <!-- NOTIFICATION BELL - CORRECT LOCATION (TOP RIGHT) -->
+                    <div class="notification-container">
+                        <button class="btn-notification" id="notificationBell">
+                            <i class="fas fa-bell"></i>
+                            <span class="notification-badge" id="notificationBadge">3</span>
+                        </button>
+                        
+                        <!-- Notification Dropdown Panel -->
+                        <div class="notification-dropdown" id="notificationDropdown" style="display: none;">
+                            <div class="notification-dropdown-header">
+                                <h3>Notifications</h3>
+                                <button class="clear-all-notifications" onclick="clearAllNotifications()">Clear All</button>
+                            </div>
+                            <div class="notification-list" id="notificationList">
+                                <!-- Notifications will load here via JavaScript -->
+                            </div>
+                            <div class="notification-dropdown-footer">
+                                <a href="notifications.html">View All Notifications</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- KPI Cards -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-icon blue">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <div class="kpi-info">
+                        <h3>Total Departments</h3>
+                        <p class="kpi-value">6</p>
+                        <span class="kpi-label">Active audits</span>
+                    </div>
+                </div>
+                
+                <div class="kpi-card">
+                    <div class="kpi-icon green">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <div class="kpi-info">
+                        <h3>Pending Checks</h3>
+                        <p class="kpi-value">24</p>
+                        <span class="kpi-label">Require attention</span>
+                    </div>
+                </div>
+                
+                <div class="kpi-card">
+                    <div class="kpi-icon orange">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="kpi-info">
+                        <h3>Risk Level</h3>
+                        <p class="kpi-value" id="riskLevelValue">Medium</p>
+                        <span class="kpi-label risk-badge medium">3 high risks</span>
+                    </div>
+                </div>
+                
+                <div class="kpi-card">
+                    <div class="kpi-icon purple">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                    <div class="kpi-info">
+                        <h3>Readiness</h3>
+                        <p class="kpi-value" id="readinessScore">68%</p>
+                        <span class="kpi-label">Overall compliance</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="charts-row">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>Department Readiness</h3>
+                        <select id="deptFilter" class="chart-filter">
+                            <option>This Month</option>
+                            <option>Last Month</option>
+                            <option>This Quarter</option>
+                        </select>
+                    </div>
+                    <div style="height: 300px;">
+                        <canvas id="deptReadinessChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>Risk Distribution</h3>
+                    </div>
+                    <div style="height: 300px;">
+                        <canvas id="riskDistributionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Department Cards -->
+            <div class="section-title">
+                <h2>Department Audit Status</h2>
+                <a href="audit-checklist.html" class="view-all">
+                    View All <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <!-- PDF Upload Section -->
+<div class="upload-section">
+    <div class="upload-header">
+        <h3>
+            <i class="fas fa-file-pdf"></i>
+            Audit Documents Upload
+        </h3>
+        <span style="font-size: 13px; color: var(--gray-500);">Upload supporting PDF documents</span>
+    </div>
+    
+    <div class="upload-grid">
+        <!-- Finance Upload Card -->
+        <div class="upload-card" onclick="document.getElementById('file-finance').click()" id="card-finance">
+            <i class="fas fa-file-pdf"></i>
+            <h4>Finance Department</h4>
+            <p>Financial statements, reconciliations</p>
+            <span class="file-info" id="file-info-finance">No file uploaded</span>
+            <div class="remove-file" onclick="removeFile('finance', event)">✕</div>
+            <input type="file" id="file-finance" class="file-input" accept=".pdf" onchange="handleFileUpload('finance', this)">
+        </div>
+        
+        <!-- HR Upload Card -->
+        <div class="upload-card" onclick="document.getElementById('file-hr').click()" id="card-hr">
+            <i class="fas fa-file-pdf"></i>
+            <h4>HR Department</h4>
+            <p>Employee records, payroll reports</p>
+            <span class="file-info" id="file-info-hr">No file uploaded</span>
+            <div class="remove-file" onclick="removeFile('hr', event)">✕</div>
+            <input type="file" id="file-hr" class="file-input" accept=".pdf" onchange="handleFileUpload('hr', this)">
+        </div>
+        
+        <!-- IT Upload Card -->
+        <div class="upload-card" onclick="document.getElementById('file-it').click()" id="card-it">
+            <i class="fas fa-file-pdf"></i>
+            <h4>IT Department</h4>
+            <p>Security policies, access logs</p>
+            <span class="file-info" id="file-info-it">No file uploaded</span>
+            <div class="remove-file" onclick="removeFile('it', event)">✕</div>
+            <input type="file" id="file-it" class="file-input" accept=".pdf" onchange="handleFileUpload('it', this)">
+        </div>
+        
+        <!-- Operations Upload Card -->
+        <div class="upload-card" onclick="document.getElementById('file-ops').click()" id="card-ops">
+            <i class="fas fa-file-pdf"></i>
+            <h4>Operations Department</h4>
+            <p>Process documents, compliance reports</p>
+            <span class="file-info" id="file-info-ops">No file uploaded</span>
+            <div class="remove-file" onclick="removeFile('ops', event)">✕</div>
+            <input type="file" id="file-ops" class="file-input" accept=".pdf" onchange="handleFileUpload('ops', this)">
+        </div>
+    </div>
+    
+    <!-- Upload Status Bar -->
+    <div style="margin-top: 20px; padding: 15px; background: var(--gray-100); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <i class="fas fa-cloud-upload-alt" style="color: var(--primary);"></i>
+            <span style="font-size: 14px; color: var(--gray-700);" id="upload-status">0/4 documents uploaded</span>
+        </div>
+        <button onclick="viewAllUploads()" style="background: none; border: none; color: var(--primary); font-size: 14px; font-weight: 600; cursor: pointer;">
+            View All <i class="fas fa-arrow-right"></i>
+        </button>
+    </div>
+</div>
+            
+            <div class="department-grid">
+                <div class="dept-card" data-dept="finance">
+                    <div class="dept-header">
+                        <div class="dept-icon finance">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <h3>Finance</h3>
+                        <span class="status-badge in-progress">In Progress</span>
+                    </div>
+                    <div class="dept-progress">
+                        <div class="progress-info">
+                            <span>Readiness</span>
+                            <span class="percentage">72%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 72%;"></div>
+                        </div>
+                    </div>
+                    <div class="dept-stats">
+                        <div class="stat">
+                            <span class="stat-label">Compliant</span>
+                            <span class="stat-value green">18</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Partial</span>
+                            <span class="stat-value orange">6</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Non-compliant</span>
+                            <span class="stat-value red">4</span>
+                        </div>
+                    </div>
+                    <button class="btn-assess" onclick="location.href='audit-checklist.html?dept=finance'">
+                        Assess Now <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+
+                <div class="dept-card" data-dept="hr">
+                    <div class="dept-header">
+                        <div class="dept-icon hr">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>Human Resources</h3>
+                        <span class="status-badge warning">At Risk</span>
+                    </div>
+                    <div class="dept-progress">
+                        <div class="progress-info">
+                            <span>Readiness</span>
+                            <span class="percentage">45%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 45%;"></div>
+                        </div>
+                    </div>
+                    <div class="dept-stats">
+                        <div class="stat">
+                            <span class="stat-label">Compliant</span>
+                            <span class="stat-value green">12</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Partial</span>
+                            <span class="stat-value orange">10</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Non-compliant</span>
+                            <span class="stat-value red">8</span>
+                        </div>
+                    </div>
+                    <button class="btn-assess" onclick="location.href='audit-checklist.html?dept=hr'">
+                        Assess Now <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+
+                <div class="dept-card" data-dept="it">
+                    <div class="dept-header">
+                        <div class="dept-icon it">
+                            <i class="fas fa-laptop-code"></i>
+                        </div>
+                        <h3>IT</h3>
+                        <span class="status-badge good">Ready</span>
+                    </div>
+                    <div class="dept-progress">
+                        <div class="progress-info">
+                            <span>Readiness</span>
+                            <span class="percentage">88%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 88%;"></div>
+                        </div>
+                    </div>
+                    <div class="dept-stats">
+                        <div class="stat">
+                            <span class="stat-label">Compliant</span>
+                            <span class="stat-value green">22</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Partial</span>
+                            <span class="stat-value orange">3</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Non-compliant</span>
+                            <span class="stat-value red">1</span>
+                        </div>
+                    </div>
+                    <button class="btn-assess" onclick="location.href='audit-checklist.html?dept=it'">
+                        Assess Now <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+
+                <div class="dept-card" data-dept="operations">
+                    <div class="dept-header">
+                        <div class="dept-icon ops">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                        <h3>Operations</h3>
+                        <span class="status-badge in-progress">In Progress</span>
+                    </div>
+                    <div class="dept-progress">
+                        <div class="progress-info">
+                            <span>Readiness</span>
+                            <span class="percentage">61%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 61%;"></div>
+                        </div>
+                    </div>
+                    <div class="dept-stats">
+                        <div class="stat">
+                            <span class="stat-label">Compliant</span>
+                            <span class="stat-value green">15</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Partial</span>
+                            <span class="stat-value orange">7</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Non-compliant</span>
+                            <span class="stat-value red">5</span>
+                        </div>
+                    </div>
+                    <button class="btn-assess" onclick="location.href='audit-checklist.html?dept=operations'">
+                        Assess Now <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/dashboard.js"></script>
+    
+    <!-- Notification System JavaScript -->
+    <script>
+        // Notification data
+        let notifications = [
+            {
+                id: 1,
+                title: "HR Department at High Risk",
+                message: "HR readiness score is 45% - Immediate action required",
+                time: "10 minutes ago",
+                read: false,
+                type: "urgent"
+            },
+            {
+                id: 2,
+                title: "Finance Assessment Completed",
+                message: "Finance department assessment saved successfully",
+                time: "2 hours ago",
+                read: false,
+                type: "success"
+            },
+            {
+                id: 3,
+                title: "Report Generated",
+                message: "IT Compliance Report is ready",
+                time: "1 day ago",
+                read: true,
+                type: "info"
+            },
+            {
+                id: 4,
+                title: "Audit Deadline Approaching",
+                message: "Q4 audit deadline in 7 days",
+                time: "2 days ago",
+                read: true,
+                type: "warning"
+            }
+        ];
+
+        // Toggle notification dropdown
+        document.addEventListener('DOMContentLoaded', function() {
+            const bell = document.getElementById('notificationBell');
+            const dropdown = document.getElementById('notificationDropdown');
+            
+            if (bell) {
+                bell.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    if (dropdown.style.display === 'none' || dropdown.style.display === '') {
+                        dropdown.style.display = 'block';
+                        loadNotificationsDropdown();
+                    } else {
+                        dropdown.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (dropdown && !dropdown.contains(e.target) && e.target !== bell && !bell?.contains(e.target)) {
+                    dropdown.style.display = 'none';
+                }
+            });
+            
+            updateNotificationBadge();
+        });
+
+        function loadNotificationsDropdown() {
+            const list = document.getElementById('notificationList');
+            if (!list) return;
+            
+            list.innerHTML = '';
+            
+            // Show only 3 most recent notifications
+            const recentNotifications = notifications.slice(0, 3);
+            
+            recentNotifications.forEach(notif => {
+                const item = document.createElement('div');
+                item.className = `notification-item-small ${notif.read ? '' : 'unread'}`;
+                
+                let icon, bgColor, iconColor;
+                switch(notif.type) {
+                    case 'urgent':
+                        icon = 'fa-exclamation-circle';
+                        bgColor = '#fee2e2';
+                        iconColor = '#dc2626';
+                        break;
+                    case 'success':
+                        icon = 'fa-check-circle';
+                        bgColor = '#dcfce7';
+                        iconColor = '#16a34a';
+                        break;
+                    case 'warning':
+                        icon = 'fa-exclamation-triangle';
+                        bgColor = '#fed7aa';
+                        iconColor = '#d97706';
+                        break;
+                    default:
+                        icon = 'fa-info-circle';
+                        bgColor = '#dbeafe';
+                        iconColor = '#2563eb';
+                }
+                
+                item.innerHTML = `
+                    <div class="notification-icon-small" style="background: ${bgColor};">
+                        <i class="fas ${icon}" style="color: ${iconColor};"></i>
+                    </div>
+                    <div class="notification-content-small">
+                        <h4>${notif.title}</h4>
+                        <p>${notif.message}</p>
+                        <span class="notification-time-small">${notif.time}</span>
+                    </div>
+                `;
+                
+                item.onclick = function() {
+                    markNotificationAsRead(notif.id);
+                };
+                
+                list.appendChild(item);
+            });
+        }
+
+        function markNotificationAsRead(id) {
+            const notif = notifications.find(n => n.id === id);
+            if (notif) {
+                notif.read = true;
+                updateNotificationBadge();
+                loadNotificationsDropdown();
+            }
+        }
+
+        function clearAllNotifications() {
+            if (confirm('Clear all notifications?')) {
+                notifications = [];
+                updateNotificationBadge();
+                loadNotificationsDropdown();
+                showNotification('All notifications cleared', 'success');
+            }
+        }
+
+        function updateNotificationBadge() {
+            const badge = document.getElementById('notificationBadge');
+            if (!badge) return;
+            
+            const unreadCount = notifications.filter(n => !n.read).length;
+            
+            if (unreadCount > 0) {
+                badge.textContent = unreadCount;
+                badge.style.display = 'flex';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        function showNotification(message, type) {
+            // Remove existing notification
+            const existing = document.querySelector('.temp-notification');
+            if (existing) existing.remove();
+            
+            const notification = document.createElement('div');
+            notification.className = 'temp-notification';
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 16px 28px;
+                background: white;
+                border-radius: 12px;
+                box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+                display: flex;
+                align-items: center;
+                gap: 15px;
+                z-index: 9999;
+                border-left: 5px solid ${type === 'success' ? '#10b981' : '#4361ee'};
+                animation: slideIn 0.3s ease-out;
+            `;
+            
+            let icon = type === 'success' ? 'fa-check-circle' : 'fa-info-circle';
+            let iconColor = type === 'success' ? '#10b981' : '#4361ee';
+            
+            notification.innerHTML = `
+                <i class="fas ${icon}" style="color: ${iconColor};"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-out';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Make functions global
+        window.clearAllNotifications = clearAllNotifications;
+
+        // ===== PDF UPLOAD FUNCTIONS =====
+function handleFileUpload(department, input) {
+    const file = input.files[0];
+    if (!file) return;
+    
+    // Check if it's a PDF
+    if (file.type !== 'application/pdf') {
+        alert('Please upload only PDF files!');
+        input.value = '';
+        return;
+    }
+    
+    // Check file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+        alert('File size should be less than 5MB!');
+        input.value = '';
+        return;
+    }
+    
+    // Update card
+    const card = document.getElementById(`card-${department}`);
+    const fileInfo = document.getElementById(`file-info-${department}`);
+    
+    card.classList.add('uploaded');
+    fileInfo.innerHTML = `<i class="fas fa-check-circle" style="color: var(--success);"></i> ${file.name}`;
+    
+    // Save to localStorage
+    const uploadedFiles = JSON.parse(localStorage.getItem('uploadedFiles') || '{}');
+    uploadedFiles[department] = {
+        name: file.name,
+        size: file.size,
+        lastModified: file.lastModified,
+        uploadedAt: new Date().toISOString()
+    };
+    localStorage.setItem('uploadedFiles', JSON.stringify(uploadedFiles));
+    
+    // Update status
+    updateUploadStatus();
+    
+    // Show success message
+    showUploadNotification(`${department.charAt(0).toUpperCase() + department.slice(1)} document uploaded successfully!`);
+}
+
+function removeFile(department, event) {
+    event.stopPropagation(); // Prevent clicking the card
+    
+    // Clear file input
+    const fileInput = document.getElementById(`file-${department}`);
+    fileInput.value = '';
+    
+    // Update card
+    const card = document.getElementById(`card-${department}`);
+    const fileInfo = document.getElementById(`file-info-${department}`);
+    
+    card.classList.remove('uploaded');
+    fileInfo.innerHTML = 'No file uploaded';
+    
+    // Remove from localStorage
+    const uploadedFiles = JSON.parse(localStorage.getItem('uploadedFiles') || '{}');
+    delete uploadedFiles[department];
+    localStorage.setItem('uploadedFiles', JSON.stringify(uploadedFiles));
+    
+    // Update status
+    updateUploadStatus();
+}
+
+function updateUploadStatus() {
+    const uploadedFiles = JSON.parse(localStorage.getItem('uploadedFiles') || '{}');
+    const count = Object.keys(uploadedFiles).length;
+    const statusElement = document.getElementById('upload-status');
+    
+    if (statusElement) {
+        statusElement.innerHTML = `${count}/4 documents uploaded`;
+        
+        if (count === 4) {
+            statusElement.style.color = 'var(--success)';
+            statusElement.innerHTML += ' ✓ All documents ready!';
+        } else if (count > 0) {
+            statusElement.style.color = 'var(--warning)';
+        } else {
+            statusElement.style.color = 'var(--gray-700)';
+        }
+    }
+}
+
+function viewAllUploads() {
+    const uploadedFiles = JSON.parse(localStorage.getItem('uploadedFiles') || '{}');
+    const count = Object.keys(uploadedFiles).length;
+    
+    if (count === 0) {
+        alert('No documents uploaded yet. Click on any card to upload PDF files.');
+    } else {
+        let message = '📁 Uploaded Documents:\n\n';
+        for (let [dept, file] of Object.entries(uploadedFiles)) {
+            message += `${dept.toUpperCase()}: ${file.name}\n`;
+        }
+        alert(message);
+    }
+}
+
+function showUploadNotification(message) {
+    // Create notification
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: var(--success);
+        color: white;
+        padding: 15px 25px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        z-index: 9999;
+        animation: slideInRight 0.3s ease;
+    `;
+    notification.innerHTML = `
+        <i class="fas fa-check-circle"></i>
+        <span>${message}</span>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        notification.style.animation = 'slideOutRight 0.3s ease';
+        setTimeout(() => {
+            notification.remove();
+        }, 300);
+    }, 3000);
+}
+
+// Load saved uploads on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Load uploaded files from localStorage
+    const uploadedFiles = JSON.parse(localStorage.getItem('uploadedFiles') || '{}');
+    
+    for (let [department, fileInfo] of Object.entries(uploadedFiles)) {
+        const card = document.getElementById(`card-${department}`);
+        const fileInfoElement = document.getElementById(`file-info-${department}`);
+        
+        if (card && fileInfoElement) {
+            card.classList.add('uploaded');
+            fileInfoElement.innerHTML = `<i class="fas fa-check-circle" style="color: var(--success);"></i> ${fileInfo.name}`;
+        }
+    }
+    
+    // Update status
+    updateUploadStatus();
+});
+
+// Add animation keyframes
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideInRight {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes slideOutRight {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+`;
+document.head.appendChild(style);
+    </script>
+</body>
+</html>
